@@ -1,0 +1,45 @@
+version: '2'
+
+services:
+ eureka:
+  build:
+   context: ./eureka
+  networks:
+   - legacy 
+  hostname: "eureka"
+  ports:
+   - "80:80"
+   - "8080:8080"
+  expose:
+   - "80"
+   - "8080"
+
+ midt:
+  build:
+   context: ./MIDT
+  networks:
+   - legacy
+  hostname: "midt"
+  depends_on: 
+   - eureka
+  expose:
+   - "9191"
+   - "9192"
+
+ edge:
+  build:
+   context: ./EDGE
+  networks:
+   - legacy
+  hostname: "edge"
+  depends_on:
+  - eureka
+  - midt
+  ports: 
+    - "9090:9090"
+  expose:
+   - "9090"
+   - "9292"
+
+networks:
+ legacy:
